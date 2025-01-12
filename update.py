@@ -2,8 +2,11 @@ import requests
 import time
 import os
 import dotenv
+import pygsheets
 
 dotenv.load_dotenv()
+
+contestNum_ID = os.getenv("CONTESTNUM_ID")
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36",
@@ -14,7 +17,7 @@ def login():
   login_url = "https://vjudge.net/user/login"
 
   payload = {
-      "username": os.getenv("USERNAME"),  
+      "userName": os.getenv("USERNAME"),  
       "password": os.getenv("PASSWORD")  
   }
 
@@ -73,8 +76,36 @@ def get_data():
 
   print(f"共發送了 {count} 次 GET 請求")
   print(f"共取得 {len(status_data)} 筆資料")
-  return status_data
+  # print(status_data)
+  d = dict()
+  for i in status_data:
+    if i["userName"] not in d:
+      d[i["userName"]] = {contestNum_ID[0]: -1, contestNum_ID[1]: -1, contestNum_ID[2]: -1, contestNum_ID[3]: -1}
+      
+  for i in status_data:
+    if i["userName"] in d:
+      if i["contestNum"] in d[i["userName"]]:
+        if d[i["userName"]][i["contestNum"]] == -1:
+          d[i["userName"]][i["contestNum"]] = i["runtime"]
+        else:
+          d[i["userName"]][i["contestNum"]] = min(d[i["userName"]][i["contestNum"]], i["runtime"])
+          
+  return d
 
-login()
+# login()
+# status_data = get_data()
+# print(status_data)
+
+gc = pygsheets.authorize(service_file='token.json')
+spreadsheet = gc.open_by_url(os.getenv("SHEET_URL"))
+worksheet = spreadsheet.worksheet_by_title('工作表1')
+namerow = worksheet.get_row(2, include_tailing_empty=False)[1:]
 status_data = get_data()
-print(status_data)
+inform = []
+for id in contestNum_ID:
+  temp = []
+  for name in namerow:
+    temp.append(status_data[name][id])
+  inform.append(temp)
+worksheet.update_values('B7:M10', inform)
+print('update finish')
