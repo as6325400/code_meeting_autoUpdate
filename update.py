@@ -102,6 +102,9 @@ worksheet = spreadsheet.worksheet_by_title('工作表1')
 namerow = worksheet.get_row(2, include_tailing_empty=False)[1:]
 status_data = get_data()
 inform = []
+for name in namerow:
+  if name not in status_data:
+    status_data[name] = {contestNum_ID[0]: -1, contestNum_ID[1]: -1, contestNum_ID[2]: -1, contestNum_ID[3]: -1}
 for id in contestNum_ID:
   temp = []
   for name in namerow:
