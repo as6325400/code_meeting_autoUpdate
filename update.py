@@ -111,4 +111,4 @@ for id in contestNum_ID:
     temp.append(status_data[name][id])
   inform.append(temp)
 worksheet.update_values('B7:M10', inform)
-print('update finish')
+print('update finis ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))

@@ -11,7 +11,7 @@ COPY . ./
 
 RUN poetry install
 
-RUN echo "*/1 * * * * cd /app && python3 update.py >> /var/log/cron.log 2>&1" \
+RUN echo "*/30 * * * * cd /app && python3 update.py >> /var/log/cron.log 2>&1" \
     > /etc/cron.d/mycron && \
     chmod 0644 /etc/cron.d/mycron && \
     crontab /etc/cron.d/mycron
