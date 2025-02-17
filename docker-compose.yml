@@ -9,4 +9,4 @@ services:
     restart: always
     volumes:
       - ./logs:/var/log/
-      - .env:/app/.env
+      - .:/app
