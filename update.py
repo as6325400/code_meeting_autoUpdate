@@ -81,14 +81,16 @@ def get_data():
   for i in status_data:
     if i["userName"] not in d:
       d[i["userName"]] = {contestNum_ID[0]: -1, contestNum_ID[1]: -1, contestNum_ID[2]: -1, contestNum_ID[3]: -1}
-      
   for i in status_data:
     if i["userName"] in d:
-      if i["contestNum"] in d[i["userName"]]:
-        if d[i["userName"]][i["contestNum"]] == -1:
-          d[i["userName"]][i["contestNum"]] = i["runtime"]
-        else:
-          d[i["userName"]][i["contestNum"]] = min(d[i["userName"]][i["contestNum"]], i["runtime"])
+      try:
+        if i["contestNum"] in d[i["userName"]]:
+          if d[i["userName"]][i["contestNum"]] == -1:
+            d[i["userName"]][i["contestNum"]] = i["runtime"]
+          else:
+            d[i["userName"]][i["contestNum"]] = min(d[i["userName"]][i["contestNum"]], i["runtime"])
+      except:
+        pass
           
   return d
 
