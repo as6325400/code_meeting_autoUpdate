@@ -112,5 +112,5 @@ for id in contestNum_ID:
   for name in namerow:
     temp.append(status_data[name][id])
   inform.append(temp)
-worksheet.update_values('B7:V10', inform)
+worksheet.update_values('B7:W10', inform)
 print('update finis ' + time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
